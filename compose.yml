@@ -1,0 +1,47 @@
+# @file prod.Dockerfile
+# @brief Builds a docker-compose environement for react native (from dev to prod)
+# @author c-stxrm
+# R↔FLIP : Fast React Local Infrastructure Platform
+services:
+  # =========================================================================
+  # DEVELOPMENT SERVICE (RFLIP_dev)
+  # Version: 1.0.0
+  # Description: Spin up an interactive, disposable development environment
+  # Uses a local Dockerfile, binds the distribution directory,
+  # developement flow happens by attaching the code editor the container
+  # effectively "warping" inside it.
+  # =========================================================================
+  RFLIP_dev:
+    container_name: RFLIP_dev_container
+    hostname: rflip-dev-host
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    volumes:
+      - ./dist:/app/dist
+    ports:
+      - "5173:5173"
+    command: ["bash"]
+    tty: true
+    stdin_open: true
+
+  # =========================================================================
+  # PRODUCTION SERVICE (RFLIP_prod)
+  # Version: 1.0.0
+  # Description: Serves the compiled production assets using Nginx. Binds the 
+  # local './dist' folder directly to Nginx's HTML root.
+  # Security/Hardening: 
+  #   - Explicit container naming and hostname mapping.
+  #   - Mounted volume is strictly Read-Only (:ro) to prevent container-side 
+  #     tampering with production builds.
+  # =========================================================================
+  RFLIP_prod:
+    container_name: RFLIP_prod_container
+    hostname: rflip-prod-host
+    build:
+      context: .
+      dockerfile: docker/prod.Dockerfile
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
