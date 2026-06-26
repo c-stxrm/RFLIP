@@ -59,7 +59,7 @@ RUN echo '@tailwind base;\n@tailwind components;\n@tailwind utilities;' > src/in
 # Creates or overwrites a JavaScript-based vite.config.js 
 # file using a Here Document (EOF).
 # Configures Vite to bind the development server 
-mto all network interfaces (0.0.0.0) 
+# Imto all network interfaces (0.0.0.0) 
 # and enables polling-based file watching for hot module replacement (HMR).
 RUN cat > vite.config.js <<'EOF'
 import { defineConfig } from 'vite'
